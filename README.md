@@ -67,17 +67,6 @@ You will scan the same `config.py` before and after adding a classroom rule. The
 
 **Optional.** With the custom rule still enabled, test demo codes with five and seven digits and explain the results. Remove the demo comment when finished.
 
-## Submit your work
+## Show me your work
 
-Submit your fork link and the six workflow-run links below. Include the relevant scanner log excerpts or screenshots. For failed scans, show the rule ID, file, and line number.
-
-| Run | Expected scanner evidence |
-| --- | --- |
-| Initial baseline | Passed, `no leaks found` |
-| Published AWS example | Failed, `classroom-aws-example` in `config.py` |
-| Environment variable restored | Passed, `no leaks found` |
-| Demo code before the new rule | Passed, `no leaks found` |
-| Same demo code after the new rule | Failed, `classroom-demo-code` in `config.py` |
-| Demo code removed | Passed, `no leaks found` |
-
-In one short paragraph, explain why the custom rule changed the result without changing `config.py), why the earlier AWS example is still visible, and what you would do first if a real credential had been exposed.
+When you finish, call me over and walk me through your project. Show me the Gitleaks runs from before and after you added your custom rule. Briefly explain why the result changed even though `config.py` stayed the same, why the AWS example is still visible in the earlier commit, and what you would do first if a real credential had been exposed.
