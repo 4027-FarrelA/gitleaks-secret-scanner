@@ -4,6 +4,16 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Repository snapshot to scan
+        type: choice
+        required: true
+        default: own-repository
+        options:
+          - own-repository
+          - stegoguard-before-fix
+          - stegoguard-after-fix
 
 permissions:
   contents: read
@@ -16,6 +26,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
+          persist-credentials: false
+
+      - name: Checkout StegoGuard practice snapshot
+        if: ${{ inputs.target == 'stegoguard-before-fix' || inputs.target == 'stegoguard-after-fix' }}
+        uses: actions/checkout@v6
+        with:
+          repository: RafikHamza/stegoguard-image-forensics
+          ref: ${{ inputs.target == 'stegoguard-after-fix' && '469eae77a53d8f8131578f0707de8f84f5e403ff' || '59db83d6d5ae525d1f96eeea7b4ae894a0cbfd02' }}
+          path: stegoguard-target
           persist-credentials: false
 
       - name: Install Gitleaks
@@ -34,10 +53,20 @@ jobs:
           tar -xzf "$archive" gitleaks
           ./gitleaks version
 
-      - name: Scan the current commit with Gitleaks
+      - name: Scan the selected repository with Gitleaks
+        shell: bash
+        env:
+          TARGET: ${{ inputs.target }}
         run: |
+          target_dir="$GITHUB_WORKSPACE"
+          if [[ "$TARGET" == stegoguard-before-fix || "$TARGET" == stegoguard-after-fix ]]; then
+            target_dir="$GITHUB_WORKSPACE/stegoguard-target"
+          fi
+          printf 'Scan target: %s\n' "${TARGET:-own-repository}"
+          git -C "$target_dir" log -1 --format='Snapshot: %H'
+
           snapshot="$(mktemp -d "$RUNNER_TEMP/gitleaks-snapshot.XXXXXX")"
-          git archive HEAD | tar -x -C "$snapshot"
+          git -C "$target_dir" archive HEAD | tar -x -C "$snapshot"
           cd "$snapshot"
-          "$RUNNER_TEMP/gitleaks/gitleaks" dir --config .gitleaks.toml \
+          "$RUNNER_TEMP/gitleaks/gitleaks" dir --config "$GITHUB_WORKSPACE/.gitleaks.toml" \
             --no-banner --redact=100 --verbose .

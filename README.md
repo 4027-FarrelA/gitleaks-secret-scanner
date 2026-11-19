@@ -17,7 +17,7 @@ You are encouraged to use AI to help interpret scan results, draft a detection r
 
 ## 1. Fork the repository and run a clean baseline
 
-1. Open the [instructor repository](https://github.com/RafikHamza/gitleaks-secret-scanner). Select **Fork**, choose your account, clear **Copy the main branch only** so you get the practice branch, and select **Create fork**.
+1. Open the [instructor repository](https://github.com/RafikHamza/gitleaks-secret-scanner). Select **Fork**, choose your account, and select **Create fork**.
 2. Open `config.py` in your fork. It should read the value from the environment.
 
    ```python
@@ -26,10 +26,10 @@ You are encouraged to use AI to help interpret scan results, draft a detection r
    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
    ```
 
-3. Open **Actions** and enable workflows if prompted. Select **Gitleaks Secret Scan**, then **Run workflow**. Choose `main` and start the run.
-4. Open the completed run. Under **scan**, expand **Scan the current commit with Gitleaks**. Confirm the step ran and the log says `no leaks found`. Save the run link.
+3. Open **Actions** and enable workflows if prompted. Select **Gitleaks Secret Scan**, then **Run workflow**. Choose `main`, leave the target set to `own-repository`, and start the run.
+4. Open the completed run. Under **scan**, expand **Scan the selected repository with Gitleaks**. Confirm the step ran and the log says `no leaks found`. Save the run link.
 
-Make all changes in your own fork using the pencil icon in GitHub. Commit to `main` for Steps 1–4. In Step 5, make changes on `classroom-practice`. Each commit starts a new scan. Match the run to the commit you just made before recording its result.
+Make all changes in your own fork using the pencil icon in GitHub. Commit to `main` for Steps 1–4. Each commit starts a new scan of your own repository. Match the run to the commit you just made before recording its result.
 
 ## 2. Add the published AWS example and inspect the finding
 
@@ -71,15 +71,17 @@ You will scan the same `config.py` before and after adding a classroom rule. The
 
 Now adapt the example rule for a fictional service of your choice. Use a different prefix, pick an exact number of digits, and give the rule a new ID. Test three values that should match and three that should pass, including the wrong prefix, one digit too few, and one digit too many. Put one value at a time on its own comment line in `config.py`. Keep a small expected-versus-actual table for the walkthrough. Remove the last test value and confirm the workflow is green.
 
-## 5. Review a realistic pull request
+## 5. Scan another GitHub project
 
-A teammate is adding settings for a fictional service. Your job is to decide whether the change is ready to merge.
+Your Gitleaks fork is the scanner. The instructor’s [StegoGuard practice branch](https://github.com/RafikHamza/stegoguard-image-forensics/tree/secret-scan-practice) is the target. It contains synthetic service settings in two fixed commits. You will review the finding and the proposed fix from the scanner repository.
 
-1. In your fork, open **Pull requests** → **New pull request**. Set the base to `main` and compare it with `classroom-practice`. If the compare branch is missing, create `classroom-practice` from your fork’s `main` and use GitHub’s web editor to copy `service_settings.py`, `.env.example`, and `docs/service-setup.md` from the [instructor’s practice branch](https://github.com/RafikHamza/gitleaks-secret-scanner/tree/classroom-practice) into the same paths on your practice branch. Check that both branches belong to your fork, then create the pull request.
-2. Open **Checks** on the pull request. In the Gitleaks scanner log, record the rule ID, file, and line number. Review the other changed files in **Files changed** and identify one safe configuration practice worth keeping. Decide whether to approve the change or request changes, and explain your decision.
-3. Fix the finding on `classroom-practice` by reading the credential from the environment. Confirm that the new pull-request scan passes.
-4. In **Commits**, find the earlier commit that introduced the sample. Be ready to explain what the new scan verified and what you would do first if the sample had been a real credential.
+1. In your Gitleaks fork, open **Actions** → **Gitleaks Secret Scan** → **Run workflow**. Keep `main` as the branch and select `stegoguard-before-fix` as the target.
+2. Open **Scan the selected repository with Gitleaks** in the completed run. The scan should fail. Locate the rule ID, file, and line number. Follow the reported path in the [before-fix snapshot](https://github.com/RafikHamza/stegoguard-image-forensics/tree/59db83d6d5ae525d1f96eeea7b4ae894a0cbfd02) and explain what change you would request. Identify one safe configuration practice in the other practice files.
+3. Run the workflow again with `stegoguard-after-fix`. Confirm the scanner reports `no leaks found`. Open the [fix commit](https://github.com/RafikHamza/stegoguard-image-forensics/commit/469eae77a53d8f8131578f0707de8f84f5e403ff) and explain how the change addresses the finding.
+4. Compare the two logs. Explain why the new snapshot passes and why the earlier commit still contains the synthetic value.
+
+The workflow checks the tracked files at the selected commit. It reads StegoGuard’s source files without running the target project. Use only the provided classroom snapshots for this exercise.
 
 ## Show me your work
 
-When you finish, call me over and walk me through your project. Show me the Gitleaks runs from before and after you added your custom rule, your rule-test table, and the pull-request finding and fix. Briefly explain why the result changed even though `config.py` stayed the same, why the AWS example is still visible in the earlier commit, and what you would do first if a real credential had been exposed.
+When you finish, call me over and walk me through your project. Show me the Gitleaks runs from before and after you added your custom rule, your rule-test table, and the finding and fix from the separate StegoGuard target. Briefly explain why the result changed even though `config.py` stayed the same, why the AWS example is still visible in the earlier commit, and what you would do first if a real credential had been exposed.
