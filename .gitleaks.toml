@@ -1,0 +1,11 @@
+title = "Gitleaks classroom rules"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "classroom-aws-example"
+description = "Published AWS example used in the classroom"
+path = '''(^|/)config\.py$'''
+regex = '''(?m)^AWS_ACCESS_KEY_ID\s*=\s*"(AKIAIOSFODNN7EXAMPLE)"'''
+secretGroup = 1
