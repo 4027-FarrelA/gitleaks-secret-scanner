@@ -12,8 +12,8 @@ on:
         default: own-repository
         options:
           - own-repository
-          - stegoguard-before-fix
-          - stegoguard-after-fix
+          - tests-before-fix
+          - tests-after-fix
 
 permissions:
   contents: read
@@ -28,13 +28,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Checkout StegoGuard practice snapshot
-        if: ${{ inputs.target == 'stegoguard-before-fix' || inputs.target == 'stegoguard-after-fix' }}
+      - name: Checkout the tests project snapshot
+        if: ${{ inputs.target == 'tests-before-fix' || inputs.target == 'tests-after-fix' }}
         uses: actions/checkout@v6
         with:
-          repository: RafikHamza/stegoguard-image-forensics
-          ref: ${{ inputs.target == 'stegoguard-after-fix' && '469eae77a53d8f8131578f0707de8f84f5e403ff' || '59db83d6d5ae525d1f96eeea7b4ae894a0cbfd02' }}
-          path: stegoguard-target
+          repository: RafikHamza/tests
+          ref: ${{ inputs.target == 'tests-after-fix' && '65706937738a63cbe9e9ea520c19ca30da069ab6' || 'a1bb4fccd5ba3a5c2ba07e76adbc9a8ae031a27b' }}
+          path: tests-target
           persist-credentials: false
 
       - name: Install Gitleaks
@@ -59,8 +59,8 @@ jobs:
           TARGET: ${{ inputs.target }}
         run: |
           target_dir="$GITHUB_WORKSPACE"
-          if [[ "$TARGET" == stegoguard-before-fix || "$TARGET" == stegoguard-after-fix ]]; then
-            target_dir="$GITHUB_WORKSPACE/stegoguard-target"
+          if [[ "$TARGET" == tests-before-fix || "$TARGET" == tests-after-fix ]]; then
+            target_dir="$GITHUB_WORKSPACE/tests-target"
           fi
           printf 'Scan target: %s\n' "${TARGET:-own-repository}"
           git -C "$target_dir" log -1 --format='Snapshot: %H'

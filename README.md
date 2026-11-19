@@ -73,15 +73,15 @@ Now adapt the example rule for a fictional service of your choice. Use a differe
 
 ## 5. Scan another GitHub project
 
-Your Gitleaks fork is the scanner. The instructor’s [StegoGuard practice branch](https://github.com/RafikHamza/stegoguard-image-forensics/tree/secret-scan-practice) is the target. It contains synthetic service settings in two fixed commits. You will review the finding and the proposed fix from the scanner repository.
+Your Gitleaks fork is the scanner. [RafikHamza/tests](https://github.com/RafikHamza/tests) is the target. It contains a small Python app for a fictional service, with synthetic configuration in two fixed commits. You will review the finding and the proposed fix from the scanner repository.
 
-1. In your Gitleaks fork, open **Actions** → **Gitleaks Secret Scan** → **Run workflow**. Keep `main` as the branch and select `stegoguard-before-fix` as the target.
-2. Open **Scan the selected repository with Gitleaks** in the completed run. The scan should fail. Locate the rule ID, file, and line number. Follow the reported path in the [before-fix snapshot](https://github.com/RafikHamza/stegoguard-image-forensics/tree/59db83d6d5ae525d1f96eeea7b4ae894a0cbfd02) and explain what change you would request. Identify one safe configuration practice in the other practice files.
-3. Run the workflow again with `stegoguard-after-fix`. Confirm the scanner reports `no leaks found`. Open the [fix commit](https://github.com/RafikHamza/stegoguard-image-forensics/commit/469eae77a53d8f8131578f0707de8f84f5e403ff) and explain how the change addresses the finding.
+1. In your Gitleaks fork, open **Actions** → **Gitleaks Secret Scan** → **Run workflow**. Keep `main` as the branch and select `tests-before-fix` as the target.
+2. Open **Scan the selected repository with Gitleaks** in the completed run. The scan should fail. Locate the rule ID, file, and line number. Follow the reported path in the [before-fix snapshot](https://github.com/RafikHamza/tests/tree/a1bb4fccd5ba3a5c2ba07e76adbc9a8ae031a27b) and explain what change you would request. Identify one safe configuration practice in the other practice files.
+3. Run the workflow again with `tests-after-fix`. Confirm the scanner reports `no leaks found`. Open the [fix commit](https://github.com/RafikHamza/tests/commit/65706937738a63cbe9e9ea520c19ca30da069ab6) and explain how the change addresses the finding.
 4. Compare the two logs. Explain why the new snapshot passes and why the earlier commit still contains the synthetic value.
 
-The workflow checks the tracked files at the selected commit. It reads StegoGuard’s source files without running the target project. Use only the provided classroom snapshots for this exercise.
+The workflow checks the tracked files at the selected commit. It reads the target’s source files without running the target project. Use only the provided classroom snapshots for this exercise.
 
 ## Show me your work
 
-When you finish, call me over and walk me through your project. Show me the Gitleaks runs from before and after you added your custom rule, your rule-test table, and the finding and fix from the separate StegoGuard target. Briefly explain why the result changed even though `config.py` stayed the same, why the AWS example is still visible in the earlier commit, and what you would do first if a real credential had been exposed.
+When you finish, call me over and walk me through your project. Show me the Gitleaks runs from before and after you added your custom rule, your rule-test table, and the finding and fix from the separate `tests` repository. Briefly explain why the result changed even though `config.py` stayed the same, why the AWS example is still visible in the earlier commit, and what you would do first if a real credential had been exposed.
