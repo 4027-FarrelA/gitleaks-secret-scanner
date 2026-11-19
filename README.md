@@ -2,6 +2,12 @@
 
 Find a hardcoded credential pattern, fix the source code, and test a detection rule of your own. Then use your scanner to review the before-and-after versions of a separate Python project. Complete the lab in your web browser.
 
+## Why this project matters
+
+Imagine a teammate opens a pull request for a new feature and accidentally commits an API key in a configuration file. The feature can work and its tests can pass while the key is exposed to anyone with access to the repository. Someone who obtains a real key could access data, make requests under the team’s account, or incur charges, depending on what the key allows. Deleting the line in a later commit can leave the original value in Git history.
+
+Running Gitleaks in GitHub Actions gives the team a repeatable check during code review. In this lab, you will use the scan log to locate a finding, verify the fix, and test a rule with examples that should and should not match. Scanning the separate `tests` project lets you practice reviewing code you did not write. By the end, you should be able to explain what the scan checked, what a passing result tells you, and how you would respond if the credential were real.
+
 | Repository | What you do there |
 | --- | --- |
 | Your fork of [gitleaks-secret-scanner](https://github.com/RafikHamza/gitleaks-secret-scanner) | Run every scan and make all your edits here. |
